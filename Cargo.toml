@@ -1,0 +1,7 @@
+[package]
+name = "vidocq"
+version = "0.1.0"
+authors = ["macarrie <mathieu0carrie@gmail.com>"]
+
+[dependencies]
+regex = "1.0.0"
