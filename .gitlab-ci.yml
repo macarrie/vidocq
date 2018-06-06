@@ -1,8 +1,5 @@
 image: "rust:latest"
 
-before_script:
-    - curl https://sh.rustup.rs -ysSf | sh
-
 # Use cargo to test the project
 test:cargo:
   script:
