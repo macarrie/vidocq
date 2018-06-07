@@ -1,5 +1,13 @@
-extern crate serde_json;
+use serde_derive;
 use regex::Regex;
+
+#[derive(Serialize)]
+pub struct MediaInfo {
+    season :i32,
+    episode :i32,
+    year :i32,
+    quality :i32,
+}
 
 fn parse_episode(name :&str) -> (i32, i32) {
     let season :i32;
@@ -69,22 +77,19 @@ fn parse_year(name :&str) -> i32 {
     }
 }
 
-pub fn parse(name :&str) -> serde_json::Value {
+pub fn parse(name :&str) -> MediaInfo {
     println!("Torrent name: {}", name);
 
     let (season_nb, episode_nb) = parse_episode(name);
     let quality = parse_quality(name);
     let year = parse_year(name);
 
-    let json = json!({
-        "season": season_nb,
-        "episode": episode_nb,
-        "quality": quality,
-        "year": year
-    });
-
-    println!("Torrent info: {}", json.to_string());
-    json
+    MediaInfo {
+        season: season_nb,
+        episode: episode_nb,
+        year: year,
+        quality: quality,
+    }
 }
 
 #[cfg(test)]
