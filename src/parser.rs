@@ -1,4 +1,3 @@
-use serde_derive;
 use regex::Regex;
 
 #[derive(Serialize)]
@@ -15,7 +14,7 @@ fn parse_episode(name :&str) -> (i32, i32) {
 
     lazy_static! {
         static ref RE_SEASON :Regex = Regex::new(r"(?i)(s)?(?P<season>\d{1,2})[ex]").unwrap();
-        static ref RE_EPISODE :Regex = Regex::new(r"(?i)[ex](?P<episode>\d{1,2})").unwrap();
+        static ref RE_EPISODE :Regex = Regex::new(r"(?i)[ex]p?(?P<episode>\d{1,2})").unwrap();
     }
 
     let season_search = RE_SEASON.captures(name);
@@ -94,9 +93,53 @@ pub fn parse(name :&str) -> MediaInfo {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+
     #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+    fn test_parse_episode() {
+        let testlist = [ "+2x5",
+            "+2X5",
+            "+02x05",
+            "+2X05",
+            "+02x5",
+            "S02E05",
+            "s02e05",
+            "s02e5",
+            "s2e05",
+            "s02ep05",
+            "s2EP5",
+            "-s02e05",
+            "-2x05"];
+
+        for s in testlist.iter() {
+            println!("Test item: {}", s);
+            let info = super::parse_episode(s);
+            assert!(info.0 == 2);
+            assert!(info.1 == 5);
+        }
+    }
+
+    #[test]
+    fn test_parse_year() {
+        let mut test_grid :HashMap<&str, i32> = HashMap::new();
+        test_grid.insert("1919", 1919);
+        test_grid.insert("2030", 2030);
+        test_grid.insert("2029", 2029);
+        test_grid.insert("(1920)", 1920);
+        test_grid.insert("2012", 2012);
+        // First marked year is taken
+        //test_grid.insert("2011 2013 (2012) (2015)", 2012);
+        // If no marked year and multiple unmarked year, second unmarked year is taken
+        //test_grid.insert("2012 2009 S01E02 2015", 2009);
+
+        for (key, val) in test_grid {
+            let year = super::parse_year(key);
+
+            println!("Test item: {}", key);
+            println!("Expected value: {}, result: {}", val, year);
+
+            assert!(year == val);
+        }
     }
 }
 
