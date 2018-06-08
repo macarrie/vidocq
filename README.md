@@ -1,4 +1,4 @@
-# Project Title
+# Vidocq
 
 vidocq is a tool designed to extract information from a torrent/media file name. It is designed to be a lighter alternative to guessit (much more complete).
 
