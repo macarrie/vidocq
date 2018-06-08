@@ -1,7 +1,18 @@
 image: "rust:latest"
 
-# Use cargo to test the project
-test:cargo:
-  script:
-  - rustc --version && cargo --version      # Print version info for debugging
-  - cargo test --all --verbose
+stages:
+    - test
+    - build
+
+test:
+    stage: test
+    script:
+        - rustc --version && cargo --version      # Print version info for debugging
+        - cargo test --all --verbose
+build:
+    stage: build
+    script:
+        - cargo build --release
+    artifacts:
+        paths:
+            - target/release/vidocq
