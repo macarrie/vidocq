@@ -1,5 +1,10 @@
+extern crate regex;
+extern crate serde;
+#[macro_use] extern crate serde_derive;
+#[macro_use] extern crate lazy_static;
+#[macro_use] extern crate matches;
+
 use regex::Regex;
-use serde;
 
 #[derive(Serialize)]
 pub struct MediaInfo {

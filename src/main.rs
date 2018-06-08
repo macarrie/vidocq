@@ -1,12 +1,5 @@
-#[macro_use] extern crate serde_derive;
-
-extern crate serde;
 extern crate serde_json;
-#[macro_use] extern crate lazy_static;
-#[macro_use] extern crate matches;
-extern crate regex;
-
-mod parser;
+extern crate vidocq;
 
 fn main() {
     let torrents = [
@@ -88,7 +81,7 @@ fn main() {
         "The.Secret.Life.of.Pets.2016.HDRiP.AAC-LC.x264-LEGi0N"];
 
     for name in torrents.iter() {
-        let info = parser::parse(name);
+        let info = vidocq::parse(name);
 
         let j = serde_json::to_string(&info).unwrap();
         println!("{}", j);
