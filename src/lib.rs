@@ -19,8 +19,6 @@ pub struct MediaInfo {
 
 
 pub fn parse(name :&str) -> MediaInfo {
-    println!("Torrent name: {}", name);
-
     let (season_nb, episode_nb) = episode::parse(name);
     let quality = quality::parse(name);
     let year = year::parse(name);
