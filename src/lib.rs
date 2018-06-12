@@ -6,6 +6,7 @@ extern crate serde;
 mod quality;
 mod year;
 mod episode;
+mod release_type;
 
 #[derive(Serialize, Debug, PartialEq)]
 pub struct MediaInfo {
@@ -13,21 +14,21 @@ pub struct MediaInfo {
     episode :i32,
     year :i32,
     quality :Option<quality::Quality>,
+    release_type :Option<release_type::ReleaseType>,
 }
-
-
-
 
 pub fn parse(name :&str) -> MediaInfo {
     let (season_nb, episode_nb) = episode::parse(name);
     let quality = quality::parse(name);
     let year = year::parse(name);
+    let release_type = release_type::parse(name);
 
     MediaInfo {
         season: season_nb,
         episode: episode_nb,
         year: year,
         quality: quality,
+        release_type: release_type,
     }
 }
 
@@ -47,12 +48,14 @@ mod tests {
             episode: 0,
             year: 2014,
             quality: Some(quality::Quality::Q720),
+            release_type: Some(release_type::ReleaseType::BluRayRip)
         });
         test_grid.insert("The Flash 2014 S01E04 HDTV x264-FUM[ettv]", MediaInfo{
             season: 1,
             episode: 4,
             year: 2014,
             quality: None,
+            release_type: Some(release_type::ReleaseType::HDTV)
         });
 
         for (key, val) in test_grid.iter() {

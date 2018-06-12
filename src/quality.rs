@@ -60,8 +60,6 @@ pub fn parse(name :&str) -> Option<Quality> {
         8640 => Some(Quality::Q16K),
         _    => None,
     }
-
-    // TODO: Handle aaaxbbb and XK qualities
 }
 
 #[cfg(test)]
