@@ -1,8 +1,6 @@
 extern crate serde;
 
 use regex::RegexSet;
-use std::cmp;
-use std::collections::HashMap;
 
 #[derive(Debug, PartialEq)]
 pub enum ReleaseType {

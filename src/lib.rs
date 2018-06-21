@@ -7,6 +7,7 @@ mod quality;
 mod year;
 mod episode;
 mod release_type;
+mod video_codec;
 
 #[derive(Serialize, Debug, PartialEq)]
 pub struct MediaInfo {
@@ -15,6 +16,7 @@ pub struct MediaInfo {
     year :i32,
     quality :Option<quality::Quality>,
     release_type :Option<release_type::ReleaseType>,
+    video_codec :Option<video_codec::VideoCodec>,
 }
 
 pub fn parse(name :&str) -> MediaInfo {
@@ -22,6 +24,7 @@ pub fn parse(name :&str) -> MediaInfo {
     let quality = quality::parse(name);
     let year = year::parse(name);
     let release_type = release_type::parse(name);
+    let video_codec = video_codec::parse(name);
 
     MediaInfo {
         season: season_nb,
@@ -29,6 +32,7 @@ pub fn parse(name :&str) -> MediaInfo {
         year: year,
         quality: quality,
         release_type: release_type,
+        video_codec: video_codec
     }
 }
 
@@ -48,14 +52,16 @@ mod tests {
             episode: 0,
             year: 2014,
             quality: Some(quality::Quality::Q720),
-            release_type: Some(release_type::ReleaseType::BluRayRip)
+            release_type: Some(release_type::ReleaseType::BluRayRip),
+            video_codec: Some(video_codec::VideoCodec::H264)
         });
         test_grid.insert("The Flash 2014 S01E04 HDTV x264-FUM[ettv]", MediaInfo{
             season: 1,
             episode: 4,
             year: 2014,
             quality: None,
-            release_type: Some(release_type::ReleaseType::HDTV)
+            release_type: Some(release_type::ReleaseType::HDTV),
+            video_codec: Some(video_codec::VideoCodec::H264)
         });
 
         for (key, val) in test_grid.iter() {
