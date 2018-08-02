@@ -8,9 +8,11 @@ mod year;
 mod episode;
 mod release_type;
 mod video_codec;
+mod title;
 
 #[derive(Serialize, Debug, PartialEq)]
 pub struct MediaInfo {
+    title :String,
     season :i32,
     episode :i32,
     year :i32,
@@ -25,8 +27,10 @@ pub fn parse(name :&str) -> MediaInfo {
     let year = year::parse(name);
     let release_type = release_type::parse(name);
     let video_codec = video_codec::parse(name);
+    let title = title::parse(name);
 
     MediaInfo {
+        title: title,
         season: season_nb,
         episode: episode_nb,
         year: year,
@@ -48,6 +52,7 @@ mod tests {
         let mut test_grid :HashMap<&str, MediaInfo> = HashMap::new();
 
         test_grid.insert("2047 - Sights of Death (2014) 720p BrRip x264 - YIFY", MediaInfo{
+            title: "2047 - Sights of Death".to_string(),
             season: 0,
             episode: 0,
             year: 2014,
@@ -56,6 +61,7 @@ mod tests {
             video_codec: Some(video_codec::VideoCodec::H264)
         });
         test_grid.insert("The Flash 2014 S01E04 HDTV x264-FUM[ettv]", MediaInfo{
+            title: "The Flash".to_string(),
             season: 1,
             episode: 4,
             year: 2014,
