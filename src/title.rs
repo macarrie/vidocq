@@ -1,6 +1,7 @@
 use regex::Regex;
 
 use super::year;
+use super::episode;
 
 pub fn parse(name :&str) -> String {
     lazy_static! {
@@ -9,29 +10,36 @@ pub fn parse(name :&str) -> String {
         static ref RE_DELIMITERS :Regex = Regex::new(r"(?i)[_\.\(\)\[\]]").unwrap();
     }
 
-    let year_str :String = year::parse(name).to_string();
-    println!("year: {}", year_str);
+    let mut offsets :Vec<usize> = Vec::new();
 
-    let year_str_position= name.rfind(&year_str).unwrap_or(0);
-    println!("year position: {}", year_str_position);
+    //Find year string in name. Everything after it is usually not part of the title
+    let year_str :String = year::parse(name).to_string();
+    let mut year_offset :usize = 0;
+    if year_str != "0" {
+        year_offset = name.rfind(&year_str).unwrap_or(0);
+    }
+    offsets.push(year_offset);
+
+    //Find season/episode number in name. Everything after it is usually not part of the title
+    offsets.push(episode::RE_SEASON.captures(name).map_or(0, |m| { 
+        m.get(0).map_or(0, |c| c.start())
+    }));
+
+    let min_offset :usize = offsets.into_iter().filter(|x| x > &0).min().unwrap_or(0);
 
     let mut work_str = name;
-    if year_str_position != 0 {
-        work_str = &work_str[..year_str_position];
+    if min_offset != 0 {
+        work_str = &work_str[..min_offset];
     }
-    println!("Cleaned year: {}", work_str);
 
     //Remove square brackets blocks
     let strip_blocks = RE_SQUARE_BLOCKS.replace_all(&work_str, "").to_string();
-    println!("Block stripped: {}", strip_blocks);
 
     //Remove parenthesis blocks
     let strip_parenthesis = RE_PARENTHESIS.replace_all(&strip_blocks, "").to_string();
-    println!("parenthesis stripped: {}", strip_parenthesis);
 
     //Replace delimiters with spaces
     let strip_delimiters = RE_DELIMITERS.replace_all(&strip_parenthesis, " ").to_string();
-    println!("delimiters stripped: {}", strip_delimiters);
 
     strip_delimiters.trim().to_string()
 }
@@ -39,17 +47,14 @@ pub fn parse(name :&str) -> String {
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-    use super::*;
 
     #[test]
     fn test_parse_title() {
         let mut test_grid :HashMap<&str, &str> = HashMap::new();
 
-        test_grid.insert("Ant-Man.2015.3D.1080p.BRRip.Half-SBS.x264.AAC-m2g", "Ant-Man");
-        test_grid.insert("Ice.Age.Collision.Course.2016.READNFO.720p.HDRIP.X264.AC3.TiTAN", "Ice Age Collision Course");
-        test_grid.insert("Red.Sonja.Queen.Of.Plagues.2016.BDRip.x264-W4F[PRiME]", "Red Sonja Queen Of Plagues");
-        test_grid.insert("The Purge: Election Year (2016) HC - 720p HDRiP - 900MB - ShAaNi", "The Purge: Election Year");
-        test_grid.insert("War Dogs (2016) HDTS 600MB - NBY", "War Dogs");
+        test_grid.insert("Show.title.S01E01.HDTV-Blablabla", "Show title");
+        test_grid.insert("Show.title.2018.S01E01.HDTV-Blablabla", "Show title");
+        test_grid.insert("Movie.title.2018.HDTV-Blablabla", "Movie title");
 
 
         for (key, val) in test_grid {

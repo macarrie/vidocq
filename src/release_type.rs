@@ -35,7 +35,7 @@ impl serde::Serialize for ReleaseType {
 pub fn parse(name :&str) -> Option<ReleaseType> {
     lazy_static! {
         static ref RE_CAM :RegexSet = RegexSet::new(&[
-            r"(?i)CAM(RIP)?",
+            r"(?i)(HD)?CAM(RIP)?",
         ]).unwrap();
         static ref RE_TELESYNC :RegexSet = RegexSet::new(&[
             r"(HD)?TS",
