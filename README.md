@@ -28,6 +28,12 @@ SAMPLE OUTPUT
 
 ## Running the tests
 
+A lot of vidocq tests are shamelessly stolen from the excellent following projects:
+
+* [Guessit](https://github.com/guessit-io/guessit)
+* [parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
+
+To run the tests:
 ```
 cargo test
 ```
