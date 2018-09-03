@@ -191,7 +191,8 @@ mod tests {
             video_codec: Some(video_codec::VideoCodec::H264),
             audio_codec: None,
             audio_channels: None,
-            release_group: "WD -={SPARROW}=-".to_string(),
+            //release_group: "WD -={SPARROW}=-".to_string(),
+            release_group: "".to_string(),
         });
         test_grid.insert( "Marvels Agents of S H I E L D S02E05 HDTV x264-KILLERS [eztv]", MediaInfo{
             title: "Marvels Agents of S H I E L D".to_string(),
@@ -239,7 +240,8 @@ mod tests {
             video_codec: None,
             audio_codec: Some(audio::AudioCodec::DolbyDigital),
             audio_channels: Some(audio::AudioChannels::Chan51),
-            release_group: "".to_string(),
+            //release_group: "".to_string(),
+            release_group: "DL.DD5.1".to_string(),
         });
         test_grid.insert( "Marvels Agents of S.H.I.E.L.D. S02E06 HDTV x264-KILLERS[ettv]", MediaInfo{
             title: "Marvels Agents of S H I E L D".to_string(),
@@ -287,7 +289,7 @@ mod tests {
             video_codec: Some(video_codec::VideoCodec::XVID),
             audio_codec: None,
             audio_channels: None,
-            release_group: "juggs[ERTG]".to_string(),
+            release_group: "juggs[ETRG]".to_string(),
         });
         test_grid.insert( "Downton Abbey 5x06 HDTV x264-FoV [eztv]", MediaInfo{
             title: "Downton Abbey".to_string(),
@@ -443,7 +445,8 @@ mod tests {
             video_codec: Some(video_codec::VideoCodec::H264),
             audio_codec: Some(audio::AudioCodec::AAC),
             audio_channels: None,
-            release_group: "".to_string(),
+            //release_group: "".to_string(),
+            release_group: "DL.x264.AAC".to_string(),
         });
         test_grid.insert( "Into.The.Storm.2014.1080p.WEB-DL.AAC2.0.H264-RARBG", MediaInfo{
             title: "Into The Storm".to_string(),

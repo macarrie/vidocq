@@ -1,12 +1,10 @@
 # Vidocq
 
-vidocq is a tool designed to extract information from a torrent/media file name. It is designed to be a lighter alternative to guessit (much more complete).
+vidocq is a tool designed to extract information from a torrent/media file name written in rust. It is designed to be a lighter alternative to guessit (much more complete).
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
+### Dependencies
 
 * rust
 
@@ -20,10 +18,12 @@ cargo build --release
 cp target/release/vidocq /usr/local/bin/
 ```
 
+### How to use
+
 Simply pass it the filename to retrieve results
 ```
-vidocq "South Park S18E05 HDTV x264-KILLERS [eztv]"
-SAMPLE OUTPUT
+$ vidocq "South Park S18E05 HDTV x264-KILLERS [eztv]"
+{"title":"South Park","season":18,"episode":5,"year":0,"quality":null,"release_type":"hdtv","video_codec":"h264","audio_codec":null,"audio_channels":null,"release_group":"KILLERS [eztv]"}
 ```
 
 ## Running the tests

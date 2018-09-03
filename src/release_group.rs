@@ -8,7 +8,6 @@ pub fn parse(name :&str) -> String {
     let mut group :String = String::from("");
     for capture in RE_RELEASE_GROUP.captures_iter(name) {
         group = capture["group"].to_string();
-        println!("GROUP: {}", group)
     }
 
     return group.trim().to_string();
