@@ -6,7 +6,7 @@ vidocq is a tool designed to extract information from a torrent/media file name 
 
 ### Dependencies
 
-* Rust
+* Rust 1.28.0
 
 ### Installing
 
