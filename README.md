@@ -1,4 +1,4 @@
-# Vidocq
+# Vidocq [![Build Status](https://travis-ci.org/macarrie/vidocq.svg?branch=master)](https://travis-ci.org/macarrie/vidocq/)
 
 vidocq is a tool designed to extract information from a torrent/media file name. It is designed to be a lighter alternative to guessit (much more complete).
 
@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-* rust
+* Rust
 
 ### Installing
 
@@ -37,3 +37,6 @@ To run the tests:
 ```
 cargo test
 ```
+
+## Contributing
+Vidocq is Open Source. Do not hesitate to opne issues for bugs or improvements
