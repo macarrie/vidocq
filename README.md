@@ -10,6 +10,11 @@ vidocq is a tool designed to extract information from a torrent/media file name 
 
 ### Installing
 
+#### Download binary
+
+Download binary in the releases page (https://github.com/macarrie/vidocq/releases) and copy it into $PATH
+
+#### Build from source
 Clone the repository, build the binary with cargo and copy the file somewhere in your PATH.
 
 ```
@@ -20,10 +25,41 @@ cp target/release/vidocq /usr/local/bin/
 
 ### How to use
 
-Simply pass it the filename to retrieve results
+```
+vidocq 0.1.0
+macarrie
+Command line tool to retrieve informations from a media/torrent name. Outputs information found as json
+
+USAGE:
+    vidocq <NAME>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <NAME>    Name to parse
+
+```
+
+#### Example:
 ```
 $ vidocq "South Park S18E05 HDTV x264-KILLERS [eztv]"
-{"title":"South Park","season":18,"episode":5,"year":0,"quality":null,"release_type":"hdtv","video_codec":"h264","audio_codec":null,"audio_channels":null,"release_group":"KILLERS [eztv]"}
+```
+Result:
+```json
+{
+    "title": "South Park",
+    "season": 18,
+    "episode": 5,
+    "year": 0,
+    "quality": null,
+    "release_type": "hdtv",
+    "video_codec": "h264",
+    "audio_codec": null,
+    "audio_channels": null,
+    "release_group": "KILLERS [eztv]"
+}
 ```
 
 ## Running the tests
