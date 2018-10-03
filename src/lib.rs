@@ -3,6 +3,7 @@ extern crate serde;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate lazy_static;
 
+mod utils;
 mod quality;
 mod year;
 mod episode;
@@ -27,14 +28,14 @@ pub struct MediaInfo {
 }
 
 pub fn parse(name :&str) -> MediaInfo {
-    let (season_nb, episode_nb) = episode::parse(name);
-    let quality = quality::parse(name);
+    let (release_type, stripped) = release_type::parse(name.to_string());
+    let (video_codec, stripped) = video_codec::parse(stripped);
+    let (audio_codec, audio_channels, stripped) = audio::parse(stripped);
+    let (release_group, stripped) = release_group::parse(stripped);
+    let (quality, stripped) = quality::parse(stripped);
     let year = year::parse(name);
-    let release_type = release_type::parse(name);
-    let video_codec = video_codec::parse(name);
-    let title = title::parse(name);
-    let (audio_codec, audio_channels) = audio::parse(name);
-    let release_group = release_group::parse(name);
+    let title = title::parse(&stripped);
+    let (season_nb, episode_nb) = episode::parse(name);
 
     MediaInfo {
         title: title,
@@ -57,8 +58,6 @@ mod tests {
 
     #[test]
     fn test_parse() {
-
-
         let mut test_grid :HashMap<&str, MediaInfo> = HashMap::new();
 
         test_grid.insert("2047 - Sights of Death (2014) 720p BrRip x264 - YIFY", MediaInfo{
@@ -191,8 +190,7 @@ mod tests {
             video_codec: Some(video_codec::VideoCodec::H264),
             audio_codec: None,
             audio_channels: None,
-            //release_group: "WD -={SPARROW}=-".to_string(),
-            release_group: "".to_string(),
+            release_group: "WD -={SPARROW}=-".to_string(),
         });
         test_grid.insert( "Marvels Agents of S H I E L D S02E05 HDTV x264-KILLERS [eztv]", MediaInfo{
             title: "Marvels Agents of S H I E L D".to_string(),
@@ -240,8 +238,7 @@ mod tests {
             video_codec: None,
             audio_codec: Some(audio::AudioCodec::DolbyDigital),
             audio_channels: Some(audio::AudioChannels::Chan51),
-            //release_group: "".to_string(),
-            release_group: "DL.DD5.1".to_string(),
+            release_group: "".to_string(),
         });
         test_grid.insert( "Marvels Agents of S.H.I.E.L.D. S02E06 HDTV x264-KILLERS[ettv]", MediaInfo{
             title: "Marvels Agents of S H I E L D".to_string(),
@@ -445,8 +442,7 @@ mod tests {
             video_codec: Some(video_codec::VideoCodec::H264),
             audio_codec: Some(audio::AudioCodec::AAC),
             audio_channels: None,
-            //release_group: "".to_string(),
-            release_group: "DL.x264.AAC".to_string(),
+            release_group: "".to_string(),
         });
         test_grid.insert( "Into.The.Storm.2014.1080p.WEB-DL.AAC2.0.H264-RARBG", MediaInfo{
             title: "Into The Storm".to_string(),

@@ -1,6 +1,8 @@
 extern crate serde;
 
-use regex::RegexSet;
+use super::utils;
+
+use regex::Regex;
 
 #[derive(Debug, PartialEq)]
 pub enum ReleaseType {
@@ -32,72 +34,114 @@ impl serde::Serialize for ReleaseType {
         }
 }
 
-pub fn parse(name :&str) -> Option<ReleaseType> {
+pub fn parse(name :String) -> (Option<ReleaseType>, String) {
     lazy_static! {
-        static ref RE_CAM :RegexSet = RegexSet::new(&[
-            r"(?i)(HD)?CAM(RIP)?",
-        ]).unwrap();
-        static ref RE_TELESYNC :RegexSet = RegexSet::new(&[
-            r"(HD)?TS",
-            r"(?i)TELESYNC",
-            r"(?i)PDVD",
-            r"(?i)PreDVDRip",
-        ]).unwrap();
-        static ref RE_TELECINE :RegexSet = RegexSet::new(&[
-            r"(?i)(HD)?TC",
-            r"(?i)TELECINE",
-        ]).unwrap();
-        static ref RE_SCREENER :RegexSet = RegexSet::new(&[
-            r"(?i)(DVD|BD)?SCR(EENER)?",
-            r"(?i)DDC",
-        ]).unwrap();
-        static ref RE_DVDRIP :RegexSet = RegexSet::new(&[
-           r"(?i)DVDR(IP)?",
-           r"(?i)DVDMux",
-           r"(?i)DVD-?(Full|\d{1,2})",
-        ]).unwrap();
-        static ref RE_HDTV :RegexSet = RegexSet::new(&[
-            r"(HD|PD)TV",
-            r"(?i)(HD|DS|SAT|DTH|DVB|TV|HDTV)Rip",
-            r"DSR",
-        ]).unwrap();
-        static ref RE_WEBDL :RegexSet = RegexSet::new(&[
-            r"(?i)WEB[-\s]?DL",
-            r"(?i)WEB[-\s]?Rip",
-            r"(?i)WEB[-\s]?Cap",
-        ]).unwrap();
-        static ref RE_BLURAY :RegexSet = RegexSet::new(&[
-            r"(?i)Blu[-\s]?Ray",
-            r"(?i)B[RD](Rip|MV|R|25|50|5|9)",
-        ]).unwrap();
+        static ref RE_CAM :Vec<Regex> = vec![
+            Regex::new(r"(?i)(HD)?CAM(RIP)?").unwrap(),
+        ];
+
+        static ref RE_TELESYNC :Vec<Regex> = vec![
+            Regex::new(r"(HD)?TS").unwrap(),
+            Regex::new(r"(?i)TELESYNC").unwrap(),
+            Regex::new(r"(?i)PDVD").unwrap(),
+            Regex::new(r"(?i)PreDVDRip").unwrap(),
+        ];
+
+        static ref RE_TELECINE :Vec<Regex> = vec![
+            Regex::new(r"(?i)(HD)?TC").unwrap(),
+            Regex::new(r"(?i)TELECINE").unwrap(),
+        ];
+
+        static ref RE_SCREENER :Vec<Regex> = vec![
+            Regex::new(r"(?i)(DVD|BD)?SCR(EENER)?").unwrap(),
+            Regex::new(r"(?i)DDC").unwrap(),
+        ];
+
+        static ref RE_DVDRIP :Vec<Regex> = vec![
+            Regex::new(r"(?i)DVDR(IP)?").unwrap(),
+            Regex::new(r"(?i)DVDMux").unwrap(),
+            Regex::new(r"(?i)DVD-?(Full|\d{1,2})").unwrap(),
+        ];
+
+        static ref RE_HDTV :Vec<Regex> = vec![
+            Regex::new(r"(HD|PD)TV").unwrap(),
+            Regex::new(r"(?i)(HD|DS|SAT|DTH|DVB|TV|HDTV)Rip").unwrap(),
+            Regex::new(r"DSR").unwrap(),
+        ];
+
+        static ref RE_WEBDL :Vec<Regex> = vec![
+            Regex::new(r"(?i)WEB[-\s]?DL").unwrap(),
+            Regex::new(r"(?i)WEB[-\s]?Rip").unwrap(),
+            Regex::new(r"(?i)WEB[-\s]?Cap").unwrap(),
+        ];
+
+        static ref RE_BLURAY :Vec<Regex> = vec![
+            Regex::new(r"(?i)Blu[-\s]?Ray").unwrap(),
+            Regex::new(r"(?i)B[RD](Rip|MV|R|25|50|5|9)").unwrap(),
+        ];
     }
 
-    if RE_BLURAY.is_match(name) {
-        return Some(ReleaseType::BluRayRip);
-    }
-    if RE_DVDRIP.is_match(name) {
-        return Some(ReleaseType::DVDRip);
-    }
-    if RE_WEBDL.is_match(name) {
-        return Some(ReleaseType::WEBDL);
-    }
-    if RE_HDTV.is_match(name) {
-        return Some(ReleaseType::HDTV);
-    }
-    if RE_SCREENER.is_match(name) {
-        return Some(ReleaseType::Screener);
-    }
-    if RE_TELECINE.is_match(name) {
-        return Some(ReleaseType::Telecine);
-    }
-    if RE_TELESYNC.is_match(name) {
-        return Some(ReleaseType::Telesync);
-    }
-    if RE_CAM.is_match(name) {
-        return Some(ReleaseType::Cam);
+
+    let mut matched_release_type :Option<ReleaseType> = None;
+    let original_name = name.clone();
+
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_BLURAY.to_vec());
+    if matched {
+        matched_release_type = Some(ReleaseType::BluRayRip);
+
+        return (matched_release_type, stripped_name);
     }
 
-    None
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_DVDRIP.to_vec());
+    if matched {
+        matched_release_type = Some(ReleaseType::DVDRip);
+
+        return (matched_release_type, stripped_name);
+    }
+
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_WEBDL.to_vec());
+    if matched {
+        matched_release_type = Some(ReleaseType::WEBDL);
+
+        return (matched_release_type, stripped_name);
+    }
+
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_HDTV.to_vec());
+    if matched {
+        matched_release_type = Some(ReleaseType::HDTV);
+
+        return (matched_release_type, stripped_name);
+    }
+
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_SCREENER.to_vec());
+    if matched {
+        matched_release_type = Some(ReleaseType::Screener);
+
+        return (matched_release_type, stripped_name);
+    }
+
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_TELECINE.to_vec());
+    if matched {
+        matched_release_type = Some(ReleaseType::Telecine);
+
+        return (matched_release_type, stripped_name);
+    }
+
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_TELESYNC.to_vec());
+    if matched {
+        matched_release_type = Some(ReleaseType::Telesync);
+
+        return (matched_release_type, stripped_name);
+    }
+
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_CAM.to_vec());
+    if matched {
+        matched_release_type = Some(ReleaseType::Cam);
+
+        return (matched_release_type, stripped_name);
+    }
+
+    (matched_release_type, original_name)
 }
 
 #[cfg(test)]
@@ -177,7 +221,7 @@ mod tests {
 
         for (key, val) in test_grid {
             println!("Test item: {}", key);
-            let release_type = super::parse(key).unwrap();
+            let release_type = super::parse(key.to_string()).0.unwrap();
 
             assert!(val == release_type);
         }
