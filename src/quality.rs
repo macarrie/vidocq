@@ -37,17 +37,20 @@ impl serde::Serialize for Quality {
         }
 }
 
-pub fn parse(name :&str) -> Option<Quality> {
+pub fn parse(name :String) -> (Option<Quality>, String) {
     lazy_static! {
         static ref RE_QUALITY :Regex = Regex::new(r"(?i)(?P<quality>\d{3,4})[pi]").unwrap();
         static ref RE_SCREEN_SIZE :Regex = Regex::new(r"(?i)\d{3,4}\s?x\s?(?P<size>\d{3,4})").unwrap();
     }
 
-    let quality = RE_QUALITY.captures(name).map_or(0, |x| x["quality"].to_string().parse::<i32>().unwrap_or(0));
-    let screen_size = RE_SCREEN_SIZE.captures(name).map_or(0, |x| x["size"].to_string().parse::<i32>().unwrap_or(0));
+    let quality = RE_QUALITY.captures(&name).map_or(0, |x| x["quality"].to_string().parse::<i32>().unwrap_or(0));
+    let screen_size = RE_SCREEN_SIZE.captures(&name).map_or(0, |x| x["size"].to_string().parse::<i32>().unwrap_or(0));
     let aggregated_quality :i32 = cmp::max(quality, screen_size);
 
-    match aggregated_quality {
+    let quality_stripped = RE_QUALITY.replace_all(&name, "");
+    let stripped = RE_SCREEN_SIZE.replace_all(&quality_stripped, "");
+
+    let matched_quality = match aggregated_quality {
         480  => Some(Quality::Q480),
         576  => Some(Quality::Q576),
         720  => Some(Quality::Q720),
@@ -59,7 +62,9 @@ pub fn parse(name :&str) -> Option<Quality> {
         4320 => Some(Quality::Q8K),
         8640 => Some(Quality::Q16K),
         _    => None,
-    }
+    };
+
+    return (matched_quality, stripped.to_string())
 }
 
 #[cfg(test)]
@@ -132,7 +137,7 @@ mod tests {
 
         for (key, val) in test_grid {
             println!("Test item: {}", key);
-            let quality = super::parse(key).unwrap();
+            let quality = super::parse(key.to_string()).0.unwrap();
 
             assert!(val == quality);
         }

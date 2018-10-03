@@ -1,6 +1,9 @@
 extern crate serde;
 
-use regex::RegexSet;
+use super::utils;
+
+use regex::Regex;
+
 
 #[derive(Debug, PartialEq)]
 pub enum VideoCodec {
@@ -28,56 +31,82 @@ impl serde::Serialize for VideoCodec {
         }
 }
 
-pub fn parse(name :&str) -> Option<VideoCodec> {
+pub fn parse(name :String) -> (Option<VideoCodec>, String) {
     lazy_static! {
-        static ref RE_H262 :RegexSet = RegexSet::new(&[
-            r"(?i)MP[E]?G[-]?2",
-            r"(?i)262",
-        ]).unwrap();
-        static ref RE_DIVX :RegexSet = RegexSet::new(&[
-            r"(?i)DIV(\s)?X",
-        ]).unwrap();
-        static ref RE_XVID :RegexSet = RegexSet::new(&[
-            r"(?i)X(\s)?VID",
-        ]).unwrap();
-        static ref RE_H263 :RegexSet = RegexSet::new(&[
-            r"(?i)263",
-        ]).unwrap();
-        static ref RE_H264 :RegexSet = RegexSet::new(&[
-            r"(?i)MP[E]?G[-]?4",
-            r"(?i)264",
-            r"(?i)AVC(HD)?",
-        ]).unwrap();
-        static ref RE_H265 :RegexSet = RegexSet::new(&[
-            r"(?i)265",
-        ]).unwrap();
+        static ref RE_H262 :Vec<Regex> = vec![
+            Regex::new(r"(?i)MP[E]?G[-]?2").unwrap(),
+            Regex::new(r"(?i)x?262").unwrap(),
+        ];
+
+        static ref RE_DIVX :Vec<Regex> = vec![
+            Regex::new(r"(?i)DIV(\s)?X").unwrap(),
+        ];
+
+        static ref RE_XVID :Vec<Regex> = vec![
+            Regex::new(r"(?i)X(\s)?VID").unwrap(),
+        ];
+
+        static ref RE_H263 :Vec<Regex> = vec![
+            Regex::new(r"(?i)x?263").unwrap(),
+        ];
+
+        static ref RE_H264 :Vec<Regex> = vec![
+            Regex::new(r"(?i)MP[E]?G[-]?4").unwrap(),
+            Regex::new(r"(?i)x?264").unwrap(),
+            Regex::new(r"(?i)AVC(HD)?").unwrap(),
+        ];
+
+        static ref RE_H265 :Vec<Regex> = vec![
+            Regex::new(r"(?i)x?265").unwrap(),
+        ];
     }
 
-    if RE_H265.is_match(name) {
-        return Some(VideoCodec::H265);
+    let mut matched_codec :Option<VideoCodec> = None;
+    let original_name = name.clone();
+
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_H265.to_vec());
+    if matched {
+        matched_codec = Some(VideoCodec::H265);
+
+        return (matched_codec, stripped_name);
     }
 
-    if RE_H264.is_match(name) {
-        return Some(VideoCodec::H264);
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_H264.to_vec());
+    if matched {
+        matched_codec = Some(VideoCodec::H264);
+
+        return (matched_codec, stripped_name);
     }
 
-    if RE_H263.is_match(name) {
-        return Some(VideoCodec::H263);
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_H263.to_vec());
+    if matched {
+        matched_codec = Some(VideoCodec::H263);
+
+        return (matched_codec, stripped_name);
     }
 
-    if RE_DIVX.is_match(name) {
-        return Some(VideoCodec::DIVX);
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_DIVX.to_vec());
+    if matched {
+        matched_codec = Some(VideoCodec::DIVX);
+
+        return (matched_codec, stripped_name);
     }
 
-    if RE_XVID.is_match(name) {
-        return Some(VideoCodec::XVID);
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_XVID.to_vec());
+    if matched {
+        matched_codec = Some(VideoCodec::XVID);
+
+        return (matched_codec, stripped_name);
     }
 
-    if RE_H262.is_match(name) {
-        return Some(VideoCodec::H262);
+    let (matched, stripped_name) = utils::find_and_strip(&name, RE_H262.to_vec());
+    if matched {
+        matched_codec = Some(VideoCodec::H262);
+
+        return (matched_codec, stripped_name);
     }
 
-    None
+    (matched_codec, original_name)
 }
 
 #[cfg(test)]
@@ -137,7 +166,7 @@ mod tests {
 
         for (key, val) in test_grid {
             println!("Test item: {}", key);
-            let video_codec = super::parse(key).unwrap();
+            let video_codec = super::parse(key.to_string()).0.unwrap();
 
             assert!(val == video_codec);
         }
