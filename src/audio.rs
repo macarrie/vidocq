@@ -36,19 +36,19 @@ impl serde::Serialize for AudioCodec {
             S: serde::Serializer,
         {
             match *self {
-                AudioCodec::MP3              => serializer.serialize_unit_variant("AudioCodec", 0, "MP3"),
+                AudioCodec::MP3              => serializer.serialize_unit_variant("AudioCodec", 0, "mp3"),
                 AudioCodec::DolbyDigital     => serializer.serialize_unit_variant("AudioCodec", 0, "dolby_digital"),
                 AudioCodec::DolbyDigitalPlus => serializer.serialize_unit_variant("AudioCodec", 0, "dolby_digital_plus"),
                 AudioCodec::DolbyAtmos       => serializer.serialize_unit_variant("AudioCodec", 0, "dolby_atmos"),
-                AudioCodec::AAC              => serializer.serialize_unit_variant("AudioCodec", 0, "AAC"),
-                AudioCodec::FLAC             => serializer.serialize_unit_variant("AudioCodec", 0, "FLAC"),
-                AudioCodec::DTS              => serializer.serialize_unit_variant("AudioCodec", 0, "DTS"),
+                AudioCodec::AAC              => serializer.serialize_unit_variant("AudioCodec", 0, "aac"),
+                AudioCodec::FLAC             => serializer.serialize_unit_variant("AudioCodec", 0, "flac"),
+                AudioCodec::DTS              => serializer.serialize_unit_variant("AudioCodec", 0, "dts"),
                 AudioCodec::DolbyTrueHD      => serializer.serialize_unit_variant("AudioCodec", 0, "dolby_true_hd"),
-                AudioCodec::DTSHD            => serializer.serialize_unit_variant("AudioCodec", 0, "DTSHD"),
+                AudioCodec::DTSHD            => serializer.serialize_unit_variant("AudioCodec", 0, "dtshd"),
                 AudioCodec::Opus             => serializer.serialize_unit_variant("AudioCodec", 0, "opus"),
                 AudioCodec::Vorbis           => serializer.serialize_unit_variant("AudioCodec", 0, "vorbis"),
-                AudioCodec::PCM              => serializer.serialize_unit_variant("AudioCodec", 0, "PCM"),
-                AudioCodec::LPCM             => serializer.serialize_unit_variant("AudioCodec", 0, "LPCM"),
+                AudioCodec::PCM              => serializer.serialize_unit_variant("AudioCodec", 0, "pcm"),
+                AudioCodec::LPCM             => serializer.serialize_unit_variant("AudioCodec", 0, "lpcm"),
             }
         }
 }
