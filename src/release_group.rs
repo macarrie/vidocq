@@ -10,7 +10,10 @@ pub fn parse(name :String) -> (String, String) {
         group = capture["group"].to_string();
     }
 
-    (group.trim().to_string(), RE_RELEASE_GROUP.replace_all(&name, "").to_string())
+    group = group.trim().to_string();
+    group = group.trim_matches('.').to_string();
+
+    (group, RE_RELEASE_GROUP.replace_all(&name, "").to_string())
 }
 
 #[cfg(test)]

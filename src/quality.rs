@@ -30,9 +30,9 @@ impl serde::Serialize for Quality {
                 Quality::Q1080 => serializer.serialize_unit_variant("Quality", 0, "1080p"),
                 Quality::Q1440 => serializer.serialize_unit_variant("Quality", 0, "1440p"),
                 Quality::Q2160 => serializer.serialize_unit_variant("Quality", 0, "2160p"),
-                Quality::Q5K   => serializer.serialize_unit_variant("Quality", 0, "5K"),
-                Quality::Q8K   => serializer.serialize_unit_variant("Quality", 0, "8K"),
-                Quality::Q16K  => serializer.serialize_unit_variant("Quality", 0, "16K"),
+                Quality::Q5K   => serializer.serialize_unit_variant("Quality", 0, "5k"),
+                Quality::Q8K   => serializer.serialize_unit_variant("Quality", 0, "8k"),
+                Quality::Q16K  => serializer.serialize_unit_variant("Quality", 0, "16k"),
             }
         }
 }
