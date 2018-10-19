@@ -1,4 +1,4 @@
-# Vidocq [![Build Status](https://travis-ci.org/macarrie/vidocq.svg?branch=master)](https://travis-ci.org/macarrie/vidocq/)
+# Vidocq [![Build Status](https://travis-ci.org/macarrie/vidocq.svg?branch=master)](https://travis-ci.org/macarrie/vidocq/) [![GuardRails badge](https://badges.production.guardrails.io/macarrie/vidocq.svg)](https://www.guardrails.io)
 
 vidocq is a tool designed to extract information from a torrent/media file name written in rust. It is designed to be a lighter alternative to guessit (much more complete).
 
