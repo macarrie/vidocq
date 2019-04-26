@@ -35,24 +35,24 @@ pub fn parse(name :&str) -> MediaInfo {
     let (video_codec, stripped) = video_codec::parse(stripped);
     let (audio_codec, audio_channels, stripped) = audio::parse(stripped);
     let (container, stripped) = container::parse(stripped);
-    let (release_group, stripped) = release_group::parse(stripped);
     let (quality, stripped) = quality::parse(stripped);
+    let (release_group, stripped) = release_group::parse(stripped);
     let year = year::parse(name);
     let title = title::parse(&stripped);
-    let (season_nb, episode_nb) = episode::parse(name);
+    let (season, episode) = episode::parse(name);
 
     MediaInfo {
-        audio_channels: audio_channels,
-        audio_codec: audio_codec,
-        container: container,
-        episode: episode_nb,
-        quality: quality,
-        release_group: release_group,
-        release_type: release_type,
-        season: season_nb,
-        title: title,
-        video_codec: video_codec,
-        year: year,
+        audio_channels,
+        audio_codec,
+        container,
+        episode,
+        quality,
+        release_group,
+        release_type,
+        season,
+        title,
+        video_codec,
+        year,
     }
 }
 
@@ -492,6 +492,20 @@ mod tests {
             audio_codec: Some(audio::AudioCodec::AAC),
             audio_channels: Some(audio::AudioChannels::Stereo),
             release_group: "RARBG".to_string(),
+            container: Some(container::Container::Matroska),
+        });
+
+        test_grid.insert( "[HorribleSubs] One Punch Man S2 - 03 [1080p].mkv", MediaInfo{
+            title: "One Punch Man".to_string(),
+            season: 2,
+            episode: 3,
+            year: 0,
+            quality: Some(quality::Quality::Q1080),
+            release_type: None,
+            video_codec: None,
+            audio_codec: None,
+            audio_channels: None,
+            release_group: "HorribleSubs".to_string(),
             container: Some(container::Container::Matroska),
         });
 

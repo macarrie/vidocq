@@ -139,7 +139,7 @@ mod tests {
             println!("Test item: {}", key);
             let quality = super::parse(key.to_string()).0.unwrap();
 
-            assert!(val == quality);
+            assert_eq!(val, quality);
         }
     }
 }

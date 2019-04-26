@@ -35,13 +35,14 @@ mod tests {
         "s2EP5",
         "-s02e05",
         "-s002e005",
+        "S2 - 05",
         "-2x05"];
 
         for s in testlist.iter() {
             println!("Test item: {}", s);
             let info = parse(s);
-            assert!(info.0 == 2);
-            assert!(info.1 == 5);
+            assert_eq!(info.0, 2);
+            assert_eq!(info.1, 5);
         }
     }
 }

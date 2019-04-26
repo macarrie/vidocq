@@ -223,7 +223,7 @@ mod tests {
             println!("Test item: {}", key);
             let release_type = super::parse(key.to_string()).0.unwrap();
 
-            assert!(val == release_type);
+            assert_eq!(val, release_type);
         }
     }
 }

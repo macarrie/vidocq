@@ -168,7 +168,7 @@ mod tests {
             println!("Test item: {}", key);
             let video_codec = super::parse(key.to_string()).0.unwrap();
 
-            assert!(val == video_codec);
+            assert_eq!(val, video_codec);
         }
     }
 }

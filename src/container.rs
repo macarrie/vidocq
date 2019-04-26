@@ -148,7 +148,7 @@ mod tests {
             println!("Test item: {}", key);
             let container = super::parse(key.to_string()).0.unwrap();
 
-            assert!(val == container);
+            assert_eq!(val, container);
         }
     }
 }

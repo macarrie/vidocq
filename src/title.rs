@@ -61,7 +61,7 @@ mod tests {
             println!("Test item: {}", key);
             let title = super::parse(key);
 
-            assert!(val == title);
+            assert_eq!(val, title);
         }
     }
 }

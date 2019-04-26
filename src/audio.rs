@@ -398,14 +398,14 @@ mod tests {
             println!("Test item: {}", key);
             let audio_codec = super::parse_codec(key.to_string()).0.unwrap();
 
-            assert!(val == audio_codec);
+            assert_eq!(val, audio_codec);
         }
 
         for (key, val) in channels_test_grid {
             println!("Test item: {}", key);
             let audio_channels = super::parse_channels(key.to_string()).0.unwrap();
 
-            assert!(val == audio_channels);
+            assert_eq!(val, audio_channels);
         }
     }
 }

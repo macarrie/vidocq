@@ -44,7 +44,7 @@ mod tests {
             let year = parse(key);
             println!("Expected value: {}, result: {}", val, year);
 
-            assert!(year == val);
+            assert_eq!(year, val);
         }
     }
 }
