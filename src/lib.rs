@@ -18,11 +18,18 @@ mod video_codec;
 mod year;
 
 #[derive(Serialize, Debug, PartialEq)]
+pub enum MediaType {
+    Movie,
+    Episode,
+}
+
+#[derive(Serialize, Debug, PartialEq)]
 pub struct MediaInfo {
     audio_channels: Option<audio::AudioChannels>,
     audio_codec: Option<audio::AudioCodec>,
     container: Option<container::Container>,
     episode: i32,
+    media_type: MediaType,
     quality: Option<quality::Quality>,
     release_group: String,
     release_type: Option<release_type::ReleaseType>,
@@ -43,11 +50,17 @@ pub fn parse(name: &str) -> MediaInfo {
     let year = year::parse(name);
     let title = title::parse(&stripped);
 
+    let media_type: MediaType = match (season, episode) {
+        (0, 0) => MediaType::Movie,
+        _ => MediaType::Episode,
+    };
+
     MediaInfo {
         audio_channels,
         audio_codec,
         container,
         episode,
+        media_type,
         quality,
         release_group,
         release_type,
@@ -74,6 +87,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: Some(quality::Quality::Q720),
                 release_type: Some(release_type::ReleaseType::BluRayRip),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -90,6 +104,7 @@ mod tests {
                 season: 1,
                 episode: 4,
                 year: 2014,
+                media_type: MediaType::Episode,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -106,6 +121,7 @@ mod tests {
                 season: 5,
                 episode: 3,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: Some(quality::Quality::Q720),
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -122,6 +138,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: Some(quality::Quality::Q1080),
                 release_type: Some(release_type::ReleaseType::BluRayRip),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -138,6 +155,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::XVID),
@@ -154,6 +172,7 @@ mod tests {
                 season: 8,
                 episode: 6,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::XVID),
@@ -170,6 +189,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: Some(quality::Quality::Q720),
                 release_type: Some(release_type::ReleaseType::BluRayRip),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -186,6 +206,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: Some(quality::Quality::Q1080),
                 release_type: Some(release_type::ReleaseType::WEBDL),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -202,6 +223,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::XVID),
@@ -218,6 +240,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::DVDRip),
                 video_codec: Some(video_codec::VideoCodec::XVID),
@@ -234,6 +257,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::WEBDL),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -250,6 +274,7 @@ mod tests {
                 season: 2,
                 episode: 5,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -266,6 +291,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: Some(quality::Quality::Q1080),
                 release_type: Some(release_type::ReleaseType::WEBDL),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -282,6 +308,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: Some(quality::Quality::Q720),
                 release_type: Some(release_type::ReleaseType::Cam),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -298,6 +325,7 @@ mod tests {
                 season: 2,
                 episode: 1,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: Some(quality::Quality::Q1080),
                 release_type: Some(release_type::ReleaseType::WEBDL),
                 video_codec: None,
@@ -314,6 +342,7 @@ mod tests {
                 season: 2,
                 episode: 6,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -330,6 +359,7 @@ mod tests {
                 season: 5,
                 episode: 3,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: Some(quality::Quality::Q1080),
                 release_type: Some(release_type::ReleaseType::WEBDL),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -346,6 +376,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2012,
+                media_type: MediaType::Movie,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::DVDRip),
                 video_codec: Some(video_codec::VideoCodec::XVID),
@@ -362,6 +393,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::BluRayRip),
                 video_codec: Some(video_codec::VideoCodec::XVID),
@@ -378,6 +410,7 @@ mod tests {
                 season: 5,
                 episode: 6,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -394,6 +427,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::XVID),
@@ -410,6 +444,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::XVID),
@@ -426,6 +461,7 @@ mod tests {
                 season: 1,
                 episode: 4,
                 year: 2014,
+                media_type: MediaType::Episode,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -442,6 +478,7 @@ mod tests {
                 season: 18,
                 episode: 5,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -452,28 +489,13 @@ mod tests {
             },
         );
         test_grid.insert(
-            "The Flash 2014 S01E03 HDTV x264-LOL[ettv]",
-            MediaInfo {
-                title: "The Flash".to_string(),
-                season: 1,
-                episode: 3,
-                year: 2014,
-                quality: None,
-                release_type: Some(release_type::ReleaseType::HDTV),
-                video_codec: Some(video_codec::VideoCodec::H264),
-                audio_codec: None,
-                audio_channels: None,
-                release_group: "LOL[ettv]".to_string(),
-                container: None,
-            },
-        );
-        test_grid.insert(
             "The Simpsons S26E05 HDTV x264 PROPER-LOL [eztv]",
             MediaInfo {
                 title: "The Simpsons".to_string(),
                 season: 26,
                 episode: 5,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -484,28 +506,13 @@ mod tests {
             },
         );
         test_grid.insert(
-            "2047 - Sights of Death (2014) 720p BrRip x264 - YIFY",
-            MediaInfo {
-                title: "2047 - Sights of Death".to_string(),
-                season: 0,
-                episode: 0,
-                year: 2014,
-                quality: Some(quality::Quality::Q720),
-                release_type: Some(release_type::ReleaseType::BluRayRip),
-                video_codec: Some(video_codec::VideoCodec::H264),
-                audio_codec: None,
-                audio_channels: None,
-                release_group: "YIFY".to_string(),
-                container: None,
-            },
-        );
-        test_grid.insert(
             "Two and a Half Men S12E01 HDTV x264 REPACK-LOL [eztv]",
             MediaInfo {
                 title: "Two and a Half Men".to_string(),
                 season: 12,
                 episode: 1,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -522,6 +529,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::WEBDL),
                 video_codec: Some(video_codec::VideoCodec::XVID),
@@ -538,6 +546,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::HDTV),
                 video_codec: Some(video_codec::VideoCodec::XVID),
@@ -554,6 +563,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: Some(quality::Quality::Q1080),
                 release_type: Some(release_type::ReleaseType::WEBDL),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -570,6 +580,7 @@ mod tests {
                 season: 1,
                 episode: 5,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: None,
                 release_type: Some(release_type::ReleaseType::WEBDL),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -586,6 +597,7 @@ mod tests {
                 season: 0,
                 episode: 0,
                 year: 2014,
+                media_type: MediaType::Movie,
                 quality: Some(quality::Quality::Q1080),
                 release_type: Some(release_type::ReleaseType::WEBDL),
                 video_codec: Some(video_codec::VideoCodec::H264),
@@ -595,7 +607,6 @@ mod tests {
                 container: Some(container::Container::Matroska),
             },
         );
-
         test_grid.insert(
             "[HorribleSubs] One Punch Man S2 - 03 [1080p].mkv",
             MediaInfo {
@@ -603,6 +614,7 @@ mod tests {
                 season: 2,
                 episode: 3,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: Some(quality::Quality::Q1080),
                 release_type: None,
                 video_codec: None,
@@ -612,7 +624,6 @@ mod tests {
                 container: Some(container::Container::Matroska),
             },
         );
-
         test_grid.insert(
             "[HorribleSubs] Mob Psycho 100 S2 - 10 [720p].mkv",
             MediaInfo {
@@ -620,6 +631,7 @@ mod tests {
                 season: 2,
                 episode: 10,
                 year: 0,
+                media_type: MediaType::Episode,
                 quality: Some(quality::Quality::Q720),
                 release_type: None,
                 video_codec: None,
