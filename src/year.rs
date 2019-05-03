@@ -1,15 +1,21 @@
 use regex::Regex;
 
-pub fn parse(name :&str) -> i32 {
+pub fn parse(name: &str) -> i32 {
     lazy_static! {
-        static ref RE_UNMARKED_YEAR :Regex = Regex::new(r"(?P<year>19\d{2}|20\d{2})").unwrap();
-        static ref RE_MARKED_YEAR :Regex = Regex::new(r"\((?P<year>19\d{2}|20\d{2})\)").unwrap();
+        static ref RE_UNMARKED_YEAR: Regex = Regex::new(r"(?P<year>19\d{2}|20\d{2})").unwrap();
+        static ref RE_MARKED_YEAR: Regex = Regex::new(r"\((?P<year>19\d{2}|20\d{2})\)").unwrap();
     }
 
-    let unmarked_years :Vec<_> = RE_UNMARKED_YEAR.captures_iter(name).map(|m| m.get(1).unwrap().as_str()).collect();
-    let marked_years :Vec<_> = RE_MARKED_YEAR.captures_iter(name).map(|m| m.get(1).unwrap().as_str()).collect();
+    let unmarked_years: Vec<_> = RE_UNMARKED_YEAR
+        .captures_iter(name)
+        .map(|m| m.get(1).unwrap().as_str())
+        .collect();
+    let marked_years: Vec<_> = RE_MARKED_YEAR
+        .captures_iter(name)
+        .map(|m| m.get(1).unwrap().as_str())
+        .collect();
 
-    if marked_years.len() > 0 {
+    if !marked_years.is_empty() {
         return marked_years[0].parse::<i32>().unwrap_or(0);
     }
 
@@ -17,17 +23,19 @@ pub fn parse(name :&str) -> i32 {
         return unmarked_years[1].parse::<i32>().unwrap_or(0);
     }
 
-    unmarked_years.get(0).map_or(0, |y| y.parse::<i32>().unwrap_or(0))
+    unmarked_years
+        .get(0)
+        .map_or(0, |y| y.parse::<i32>().unwrap_or(0))
 }
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
     use super::*;
+    use std::collections::HashMap;
 
     #[test]
     fn test_parse_year() {
-        let mut test_grid :HashMap<&str, i32> = HashMap::new();
+        let mut test_grid: HashMap<&str, i32> = HashMap::new();
         test_grid.insert("1919", 1919);
         test_grid.insert("2030", 2030);
         test_grid.insert("2029", 2029);
@@ -44,7 +52,7 @@ mod tests {
             let year = parse(key);
             println!("Expected value: {}, result: {}", val, year);
 
-            assert!(year == val);
+            assert_eq!(year, val);
         }
     }
 }
