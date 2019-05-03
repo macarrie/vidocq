@@ -613,6 +613,23 @@ mod tests {
             },
         );
 
+        test_grid.insert(
+            "[HorribleSubs] Mob Psycho 100 S2 - 10 [720p].mkv",
+            MediaInfo {
+                title: "Mob Psycho 100".to_string(),
+                season: 2,
+                episode: 10,
+                year: 0,
+                quality: Some(quality::Quality::Q720),
+                release_type: None,
+                video_codec: None,
+                audio_codec: None,
+                audio_channels: None,
+                release_group: "HorribleSubs".to_string(),
+                container: Some(container::Container::Matroska),
+            },
+        );
+
         for (key, val) in test_grid.iter() {
             println!("Test item: {}", key);
             let info = parse(key);

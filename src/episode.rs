@@ -1,4 +1,3 @@
-use super::utils;
 use regex::Regex;
 
 lazy_static! {
@@ -26,14 +25,10 @@ pub fn parse(name: String) -> (i32, i32, String) {
         });
 
     if season_sep != 0 && episode_sep != 0 {
-        let (_, stripped_name) =
-            utils::find_and_strip(&name, vec![(*RE_SEASON_AND_EPISODE_SEPARATED).clone()]);
-        println!("Stripped: {}", stripped_name);
-        return (season_sep, episode_sep, stripped_name);
+        return (season_sep, episode_sep, name);
     }
 
-    let (_, stripped_name) = utils::find_and_strip(&name, vec![(*RE_SEASON_AND_EPISODE).clone()]);
-    (season, episode, name.to_string())
+    (season, episode, name)
 }
 
 #[cfg(test)]
