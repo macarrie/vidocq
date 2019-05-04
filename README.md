@@ -56,7 +56,7 @@ Result:
     "audio_codec": null,
     "container": null,
     "episode": 5,
-    "media_type": "Episode",
+    "media_type": "episode",
     "quality": null,
     "release_group": "KILLERS [eztv]",
     "release_type": "hdtv",
