@@ -41,7 +41,7 @@ pub struct MediaInfo {
 }
 
 pub fn parse(name: &str, options: Option<configuration::CliOptions>) -> MediaInfo {
-    let options: configuration::CliOptions = options.unwrap_or(Default::default());
+    let options: configuration::CliOptions = options.unwrap_or_default();
 
     let (release_type, stripped) = release_type::parse(name.to_string());
     let (video_codec, stripped) = video_codec::parse(stripped);
@@ -683,11 +683,10 @@ mod tests {
             println!("Test item: {}", key);
             let options = configuration::CliOptions {
                 media_type: val.0,
-                ..Default::default()
             };
             let info = parse(key, Some(options));
 
-            assert_eq!(val.1, (&info).media_type);
+            assert_eq!(val.1, info.media_type);
         }
     }
 }

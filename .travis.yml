@@ -5,9 +5,9 @@ rust:
 before_script:
   - rustup component add clippy
 script:
-  - cargo clippy --all-targets --all-features -- -D warnings -A clippy::trivial-regex
-  - cargo build --verbose --all --release
-  - cargo test --verbose --all
+  - make check
+  - make test
+  - make build
 deploy:
     provider: releases
     api_key: "$GITHUB_OAUTH_TOKEN"
