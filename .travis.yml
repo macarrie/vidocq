@@ -14,3 +14,6 @@ deploy:
     file: "target/release/vidocq"
     skip_cleanup: true
     draft: true
+    on:
+        branch: master
+        tags: true

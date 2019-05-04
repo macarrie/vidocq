@@ -18,10 +18,22 @@ mod title;
 mod video_codec;
 mod year;
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum MediaType {
     Movie,
     Episode,
+}
+
+impl serde::Serialize for MediaType {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match *self {
+            MediaType::Movie => serializer.serialize_unit_variant("MediaType", 0, "movie"),
+            MediaType::Episode => serializer.serialize_unit_variant("MediaType", 0, "episode"),
+        }
+    }
 }
 
 #[derive(Serialize, Debug, PartialEq)]
