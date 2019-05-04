@@ -8,6 +8,7 @@ extern crate lazy_static;
 mod utils;
 
 mod audio;
+pub mod configuration;
 mod container;
 mod episode;
 mod quality;
@@ -39,20 +40,30 @@ pub struct MediaInfo {
     year: i32,
 }
 
-pub fn parse(name: &str) -> MediaInfo {
+pub fn parse(name: &str, options: Option<configuration::CliOptions>) -> MediaInfo {
+    let options: configuration::CliOptions = options.unwrap_or(Default::default());
+
     let (release_type, stripped) = release_type::parse(name.to_string());
     let (video_codec, stripped) = video_codec::parse(stripped);
     let (audio_codec, audio_channels, stripped) = audio::parse(stripped);
     let (container, stripped) = container::parse(stripped);
-    let (season, episode, stripped) = episode::parse(stripped);
+    let (season, episode, stripped) = if let Some("movie") = options.media_type {
+        (0, 0, name.to_string())
+    } else {
+        episode::parse(stripped)
+    };
     let (quality, stripped) = quality::parse(stripped);
     let (release_group, stripped) = release_group::parse(stripped);
     let year = year::parse(name);
     let title = title::parse(&stripped);
 
-    let media_type: MediaType = match (season, episode) {
-        (0, 0) => MediaType::Movie,
-        _ => MediaType::Episode,
+    let media_type: MediaType = match options.media_type {
+        Some("movie") => MediaType::Movie,
+        Some("episode") => MediaType::Episode,
+        _ => match (season, episode) {
+            (0, 0) => MediaType::Movie,
+            _ => MediaType::Episode,
+        },
     };
 
     MediaInfo {
@@ -644,9 +655,39 @@ mod tests {
 
         for (key, val) in test_grid.iter() {
             println!("Test item: {}", key);
-            let info = parse(key);
+            let info = parse(key, None);
 
             assert_eq!(val, &info);
+        }
+    }
+
+    #[test]
+    fn test_cli_opt_type() {
+        let mut test_grid: HashMap<&str, (Option<&str>, MediaType)> = HashMap::new();
+
+        test_grid.insert(
+            "media_type_forced_movie_s01e01",
+            (Some("movie"), MediaType::Movie),
+        );
+        test_grid.insert(
+            "media_type_forced_episode",
+            (Some("episode"), MediaType::Episode),
+        );
+        test_grid.insert("media_type_detect_movie", (None, MediaType::Movie));
+        test_grid.insert(
+            "media_type_detect_episode_s01e01",
+            (None, MediaType::Episode),
+        );
+
+        for (key, val) in test_grid.iter() {
+            println!("Test item: {}", key);
+            let options = configuration::CliOptions {
+                media_type: val.0,
+                ..Default::default()
+            };
+            let info = parse(key, Some(options));
+
+            assert_eq!(val.1, (&info).media_type);
         }
     }
 }

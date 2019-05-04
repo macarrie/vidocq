@@ -23,9 +23,11 @@ fn main() {
         .get_matches();
 
     let name = matches.value_of("NAME").unwrap();
-    let media_type = matches.value_of("TYPE").unwrap();
-    println!("Media type: '{}'", media_type);
-    let info = vidocq::parse(name);
+
+    let options: vidocq::configuration::CliOptions = vidocq::configuration::CliOptions {
+        media_type: matches.value_of("TYPE"),
+    };
+    let info = vidocq::parse(name, Some(options));
     let j = serde_json::to_string(&info).unwrap();
 
     println!("{}", j);
