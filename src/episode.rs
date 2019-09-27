@@ -5,6 +5,10 @@ lazy_static! {
         Regex::new(r"(?i)(s)?(?P<season>\d{1,3})[ex]p?(?P<episode>\d{1,3})").unwrap();
     pub static ref RE_SEASON_AND_EPISODE_SEPARATED: Regex =
         Regex::new(r"(?i)(s)?(?P<season>\d{1,3})\s?[-:]\s?(?P<episode>\d{1,3})").unwrap();
+    pub static ref RE_SEASON: Regex =
+        Regex::new(r"(?i)s(eason)?(\s*)?(?P<season>\d{1,3})").unwrap();
+    pub static ref RE_EPISODE: Regex =
+        Regex::new(r"(?i)e(pisode)?(\s*)?(?P<episode>\d{1,3})").unwrap();
 }
 
 pub fn parse(name: String) -> (i32, i32, String) {
@@ -24,11 +28,22 @@ pub fn parse(name: String) -> (i32, i32, String) {
             (season, episode)
         });
 
+    let season_only: i32 = RE_SEASON
+        .captures(&name)
+        .map_or(0, |x| x["season"].to_string().parse::<i32>().unwrap_or(0));
+
+    let episode_only: i32 = RE_EPISODE
+        .captures(&name)
+        .map_or(0, |x| x["episode"].to_string().parse::<i32>().unwrap_or(0));
+
     if season_sep != 0 && episode_sep != 0 {
         return (season_sep, episode_sep, name);
     }
 
-    (season, episode, name)
+    let season_return = if season == 0 { season_only } else { season };
+    let episode_return = if episode == 0 { episode_only } else { episode };
+
+    (season_return, episode_return, name)
 }
 
 #[cfg(test)]
@@ -55,6 +70,7 @@ mod tests {
             "S2 - 05",
             "S02-005",
             "-2x05",
+            "Season 02 --- Episode 5",
         ];
 
         for s in testlist.iter() {

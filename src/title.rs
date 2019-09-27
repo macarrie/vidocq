@@ -1,9 +1,11 @@
 use regex::Regex;
+use std::ffi::OsStr;
+use std::path::Path;
 
 use super::episode;
 use super::year;
 
-pub fn parse(name: &str) -> String {
+fn parse_title_from_filename(name: &str) -> String {
     lazy_static! {
         static ref RE_SQUARE_BLOCKS: Regex = Regex::new(r"(?i)\[.*\]").unwrap();
         static ref RE_PARENTHESIS: Regex = Regex::new(r"(?i)\(.*\)").unwrap();
@@ -33,13 +35,28 @@ pub fn parse(name: &str) -> String {
             .captures(name)
             .map_or(0, |m| m.get(0).map_or(0, |c| c.start())),
     );
+    offsets.push(
+        episode::RE_SEASON
+            .captures(name)
+            .map_or(0, |m| m.get(0).map_or(0, |c| c.start())),
+    );
+    offsets.push(
+        episode::RE_EPISODE
+            .captures(name)
+            .map_or(0, |m| m.get(0).map_or(0, |c| c.start())),
+    );
 
     let min_offset: usize = offsets.into_iter().filter(|x| *x > 0).min().unwrap_or(0);
 
+    //    let mut work_str = name;
     let mut work_str = name;
+
     if min_offset != 0 {
         work_str = &work_str[..min_offset];
     }
+    let mut file_path: Vec<&OsStr> = Path::new(work_str).iter().collect();
+    let filename_from_path = file_path.pop().clone().unwrap().to_str().unwrap();
+    work_str = filename_from_path;
 
     //Remove square brackets blocks
     let strip_blocks = RE_SQUARE_BLOCKS.replace_all(&work_str, "").to_string();
@@ -53,6 +70,19 @@ pub fn parse(name: &str) -> String {
         .to_string();
 
     strip_delimiters.trim().to_string()
+}
+
+pub fn parse(name: &str) -> String {
+    let mut file_path: Vec<&OsStr> = Path::new(name).iter().collect();
+    let filename_from_path = file_path.pop().clone().unwrap().to_str().unwrap();
+
+    if file_path.len() >= 3 {
+        let title_part_from_filepath = file_path[file_path.len() - 2].to_str().unwrap();
+
+        return parse_title_from_filename(&title_part_from_filepath);
+    }
+
+    return parse_title_from_filename(filename_from_path);
 }
 
 #[cfg(test)]

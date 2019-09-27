@@ -65,7 +65,7 @@ pub fn parse(name: &str, options: Option<configuration::CliOptions>) -> MediaInf
         episode::parse(stripped)
     };
     let (quality, stripped) = quality::parse(stripped);
-    let (release_group, stripped) = release_group::parse(stripped);
+    let (release_group, stripped) = release_group::parse(&stripped);
     let year = year::parse(name);
     let title = title::parse(&stripped);
 
@@ -664,6 +664,23 @@ mod tests {
                 container: Some(container::Container::Matroska),
             },
         );
+        test_grid.insert(
+            "Series/Doctor Who (2005)/Season 06/Doctor Who (2005) - E01.avi",
+            MediaInfo {
+                title: "Doctor Who".to_string(),
+                season: 6,
+                episode: 01,
+                year: 2005,
+                media_type: MediaType::Episode,
+                quality: None,
+                release_type: None,
+                video_codec: None,
+                audio_codec: None,
+                audio_channels: None,
+                release_group: "".to_string(),
+                container: Some(container::Container::AVI),
+            },
+        );
 
         for (key, val) in test_grid.iter() {
             println!("Test item: {}", key);
@@ -693,9 +710,7 @@ mod tests {
 
         for (key, val) in test_grid.iter() {
             println!("Test item: {}", key);
-            let options = configuration::CliOptions {
-                media_type: val.0,
-            };
+            let options = configuration::CliOptions { media_type: val.0 };
             let info = parse(key, Some(options));
 
             assert_eq!(val.1, info.media_type);
