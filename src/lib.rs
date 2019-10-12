@@ -4,6 +4,8 @@ extern crate serde;
 extern crate serde_derive;
 #[macro_use]
 extern crate lazy_static;
+use std::ffi::OsStr;
+use std::path::Path;
 
 mod utils;
 
@@ -18,7 +20,7 @@ mod title;
 mod video_codec;
 mod year;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum MediaType {
     Movie,
     Episode,
@@ -55,19 +57,21 @@ pub struct MediaInfo {
 pub fn parse(name: &str, options: Option<configuration::CliOptions>) -> MediaInfo {
     let options: configuration::CliOptions = options.unwrap_or_default();
 
-    let (release_type, stripped) = release_type::parse(name.to_string());
+    let mut file_path: Vec<&OsStr> = Path::new(name).iter().collect();
+    let filename_from_path = file_path.pop().clone().unwrap().to_str().unwrap();
+
+    let (release_type, stripped) = release_type::parse(filename_from_path.to_string());
     let (video_codec, stripped) = video_codec::parse(stripped);
     let (audio_codec, audio_channels, stripped) = audio::parse(stripped);
     let (container, stripped) = container::parse(stripped);
-    let (season, episode, stripped) = if let Some("movie") = options.media_type {
+    let (season, episode, _stripped) = if let Some("movie") = options.media_type {
         (0, 0, name.to_string())
     } else {
-        episode::parse(stripped)
+        episode::parse(name.to_string())
     };
     let (quality, stripped) = quality::parse(stripped);
-    let (release_group, stripped) = release_group::parse(stripped);
+    let (release_group, _stripped) = release_group::parse(&stripped);
     let year = year::parse(name);
-    let title = title::parse(&stripped);
 
     let media_type: MediaType = match options.media_type {
         Some("movie") => MediaType::Movie,
@@ -77,6 +81,8 @@ pub fn parse(name: &str, options: Option<configuration::CliOptions>) -> MediaInf
             _ => MediaType::Episode,
         },
     };
+
+    let title = title::parse(name, Some(media_type));
 
     MediaInfo {
         audio_channels,
@@ -664,6 +670,57 @@ mod tests {
                 container: Some(container::Container::Matroska),
             },
         );
+        test_grid.insert(
+            "Series/Doctor Who (2005)/Season 06/Doctor Who (2005) - E01.avi",
+            MediaInfo {
+                title: "Doctor Who".to_string(),
+                season: 6,
+                episode: 1,
+                year: 2005,
+                media_type: MediaType::Episode,
+                quality: None,
+                release_type: None,
+                video_codec: None,
+                audio_codec: None,
+                audio_channels: None,
+                release_group: "".to_string(),
+                container: Some(container::Container::AVI),
+            },
+        );
+        test_grid.insert(
+            "/var/lib/flemzerd/library/movies/Django Unchained/sparks-django-xvid.cd1.avi",
+            MediaInfo {
+                title: "Django Unchained".to_string(),
+                season: 0,
+                episode: 0,
+                year: 0,
+                media_type: MediaType::Movie,
+                quality: None,
+                release_type: None,
+                video_codec: Some(video_codec::VideoCodec::XVID),
+                audio_codec: None,
+                audio_channels: None,
+                release_group: "cd1".to_string(),
+                container: Some(container::Container::AVI),
+            },
+        );
+        test_grid.insert(
+            "/var/lib/flemzerd/library/shows/rick_and_morty/season_3/s03e10/Rick and Morty S03E10 720p HDTV x264-BATV/Rick.and.Morty.S03E10.720p.HDTV.x264-BATV[eztv].mkv",
+            MediaInfo {
+                title: "Rick and Morty".to_string(),
+                season: 3,
+                episode: 10,
+                year: 0,
+                media_type: MediaType::Episode,
+                quality: Some(quality::Quality::Q720),
+                release_type: Some(release_type::ReleaseType::HDTV),
+                video_codec: Some(video_codec::VideoCodec::H264),
+                audio_codec: None,
+                audio_channels: None,
+                release_group: "BATV[eztv]".to_string(),
+                container: Some(container::Container::Matroska),
+            },
+        );
 
         for (key, val) in test_grid.iter() {
             println!("Test item: {}", key);
@@ -693,9 +750,7 @@ mod tests {
 
         for (key, val) in test_grid.iter() {
             println!("Test item: {}", key);
-            let options = configuration::CliOptions {
-                media_type: val.0,
-            };
+            let options = configuration::CliOptions { media_type: val.0 };
             let info = parse(key, Some(options));
 
             assert_eq!(val.1, info.media_type);
