@@ -675,7 +675,7 @@ mod tests {
             MediaInfo {
                 title: "Doctor Who".to_string(),
                 season: 6,
-                episode: 01,
+                episode: 1,
                 year: 2005,
                 media_type: MediaType::Episode,
                 quality: None,

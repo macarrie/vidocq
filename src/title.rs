@@ -54,8 +54,8 @@ fn parse_title_from_filename(name: &str) -> String {
     if min_offset != 0 {
         work_str = &work_str[..min_offset];
     }
-    let mut file_path: Vec<&OsStr> = Path::new(work_str).iter().collect();
-    let filename_from_path = file_path.pop().clone().unwrap().to_str().unwrap();
+    let file_path: Vec<&OsStr> = Path::new(work_str).iter().collect();
+    let filename_from_path = file_path[file_path.len() - 1].to_str().unwrap();
     work_str = filename_from_path;
 
     //Remove square brackets blocks
@@ -78,7 +78,7 @@ pub fn parse(name: &str, media_type: Option<MediaType>) -> String {
     }
 
     let file_path: Vec<&OsStr> = Path::new(name).iter().collect();
-    let filename_from_path = file_path[file_path.len() - 1].clone().to_str().unwrap();
+    let filename_from_path = file_path[file_path.len() - 1].to_str().unwrap();
 
     let filepath_shift :usize = match media_type {
         Some(MediaType::Movie) => 2,
@@ -97,7 +97,7 @@ pub fn parse(name: &str, media_type: Option<MediaType>) -> String {
     let contains_caps :Vec<String> = str_title.into_iter().filter(|x| RE_CAPS.is_match(&x)).collect();
 
     //Heuristic: filepath parts that contains caps may contain media title. This is useful when parsing full filepaths. For example: "/var/lib/flemzerd/library/shows/rick_and_morty/season_3/s03e10/Rick and Morty S03E10 720p HDTV x264-BATV/Rick.and.Morty.S03E10.720p.HDTV.x264-BATV[eztv].mkv"
-    if contains_caps.len() > 0 && file_path.len() > 1 {
+    if !contains_caps.is_empty() && file_path.len() > 1 {
         return parse_title_from_filename(&(contains_caps[0].clone()));
     }
 
