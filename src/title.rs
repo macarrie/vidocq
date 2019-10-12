@@ -107,7 +107,7 @@ pub fn parse(name: &str, media_type: Option<MediaType>) -> String {
         return parse_title_from_filename(&title_part_from_filepath);
     }
 
-    return parse_title_from_filename(filename_from_path);
+    parse_title_from_filename(filename_from_path)
 }
 
 #[cfg(test)]
