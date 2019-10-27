@@ -26,7 +26,7 @@ cp target/release/vidocq /usr/local/bin/
 ### How to use
 
 ```
-vidocq 0.1.1
+vidocq 0.1.3
 macarrie
 Command line tool to retrieve informations from a media/torrent name. Outputs information found as json
 
@@ -52,18 +52,19 @@ $ vidocq "South Park S18E05 HDTV x264-KILLERS [eztv]"
 Result:
 ```json
 {
-    "audio_channels": null,
-    "audio_codec": null,
-    "container": null,
-    "episode": 5,
-    "media_type": "episode",
-    "quality": null,
-    "release_group": "KILLERS [eztv]",
-    "release_type": "hdtv",
-    "season": 18,
-    "title": "South Park",
-    "video_codec": "h264",
-    "year": 0
+  "audio_channels": null,
+  "audio_codec": null,
+  "container": null,
+  "episode": 5,
+  "media_type": "episode",
+  "quality": null,
+  "release_group": "KILLERS [eztv]",
+  "release_type": "hdtv",
+  "season": 18,
+  "title": "South Park",
+  "raw": "South Park S18E05 HDTV x264-KILLERS [eztv]",
+  "video_codec": "h264",
+  "year": 0
 }
 ```
 

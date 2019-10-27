@@ -6,7 +6,7 @@ use clap::{App, Arg};
 
 fn main() {
     let matches = App::new("vidocq")
-        .version("0.1.1")
+        .version(env!("CARGO_PKG_VERSION"))
         .author("macarrie")
         .about("Command line tool to retrieve informations from a media/torrent name. Outputs information found as json")
         .arg(Arg::with_name("NAME")

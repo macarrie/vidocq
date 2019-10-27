@@ -50,6 +50,7 @@ pub struct MediaInfo {
     release_type: Option<release_type::ReleaseType>,
     season: i32,
     title: String,
+    raw: String,
     video_codec: Option<video_codec::VideoCodec>,
     year: i32,
 }
@@ -97,6 +98,7 @@ pub fn parse(name: &str, options: Option<configuration::CliOptions>) -> MediaInf
         title,
         video_codec,
         year,
+        raw: name.to_string(),
     }
 }
 
@@ -124,6 +126,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "YIFY".to_string(),
                 container: None,
+                raw: "2047 - Sights of Death (2014) 720p BrRip x264 - YIFY".to_string(),
             },
         );
         test_grid.insert(
@@ -141,6 +144,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "FUM[ettv]".to_string(),
                 container: None,
+                raw: "The Flash 2014 S01E04 HDTV x264-FUM[ettv]".to_string(),
             },
         );
         test_grid.insert(
@@ -158,6 +162,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "ASAP[ettv]".to_string(),
                 container: None,
+                raw: "The Walking Dead S05E03 720p HDTV x264-ASAP[ettv]".to_string(),
             },
         );
         test_grid.insert(
@@ -175,6 +180,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "YIFY".to_string(),
                 container: None,
+                raw: "Hercules (2014) 1080p BrRip H264 - YIFY".to_string(),
             },
         );
         test_grid.insert(
@@ -192,6 +198,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "EVO".to_string(),
                 container: None,
+                raw: "Dawn.of.the.Planet.of.the.Apes.2014.HDRip.XViD-EVO".to_string(),
             },
         );
         test_grid.insert(
@@ -209,6 +216,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "LOL [eztv]".to_string(),
                 container: None,
+                raw: "The Big Bang Theory S08E06 HDTV XviD-LOL [eztv]".to_string(),
             },
         );
         test_grid.insert(
@@ -226,6 +234,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "YIFY".to_string(),
                 container: None,
+                raw: "22 Jump Street (2014) 720p BrRip x264 - YIFY".to_string(),
             },
         );
         test_grid.insert(
@@ -243,6 +252,7 @@ mod tests {
                 audio_channels: Some(audio::AudioChannels::Chan51),
                 release_group: "RARBG".to_string(),
                 container: None,
+                raw: "Hercules.2014.EXTENDED.1080p.WEB-DL.DD5.1.H264-RARBG".to_string(),
             },
         );
         test_grid.insert(
@@ -260,6 +270,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "juggs[ETRG]".to_string(),
                 container: None,
+                raw: "Hercules.2014.EXTENDED.HDRip.XViD-juggs[ETRG]".to_string(),
             },
         );
         test_grid.insert(
@@ -277,6 +288,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "MAX".to_string(),
                 container: None,
+                raw: "Hercules (2014) WEBDL DVDRip XviD-MAX".to_string(),
             },
         );
         test_grid.insert(
@@ -294,6 +306,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "WD -={SPARROW}=-".to_string(),
                 container: None,
+                raw: "WWE Hell in a Cell 2014 PPV WEB-DL x264-WD -={SPARROW}=-".to_string(),
             },
         );
         test_grid.insert(
@@ -311,6 +324,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "KILLERS [eztv]".to_string(),
                 container: None,
+                raw: "Marvels Agents of S H I E L D S02E05 HDTV x264-KILLERS [eztv]".to_string(),
             },
         );
         test_grid.insert(
@@ -328,6 +342,7 @@ mod tests {
                 audio_channels: Some(audio::AudioChannels::Chan51),
                 release_group: "RARBG".to_string(),
                 container: None,
+                raw: "X-Men.Days.of.Future.Past.2014.1080p.WEB-DL.DD5.1.H264-RARBG".to_string(),
             },
         );
         test_grid.insert(
@@ -345,6 +360,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "JYK".to_string(),
                 container: None,
+                raw: "Guardians Of The Galaxy 2014 R6 720p HDCAM x264-JYK".to_string(),
             },
         );
         test_grid.insert(
@@ -362,6 +378,7 @@ mod tests {
                 audio_channels: Some(audio::AudioChannels::Chan51),
                 release_group: "".to_string(),
                 container: None,
+                raw: "Marvel's.Agents.of.S.H.I.E.L.D.S02E01.Shadows.1080p.WEB-DL.DD5.1".to_string(),
             },
         );
         test_grid.insert(
@@ -379,6 +396,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "KILLERS[ettv]".to_string(),
                 container: None,
+                raw: "Marvels Agents of S.H.I.E.L.D. S02E06 HDTV x264-KILLERS[ettv]".to_string(),
             },
         );
         test_grid.insert(
@@ -396,6 +414,7 @@ mod tests {
                 audio_channels: Some(audio::AudioChannels::Chan51),
                 release_group: "Cyphanix[rartv]".to_string(),
                 container: None,
+                raw: "The.Walking.Dead.S05E03.1080p.WEB-DL.DD5.1.H.264-Cyphanix[rartv]".to_string(),
             },
         );
         test_grid.insert(
@@ -413,6 +432,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "UNiQUE".to_string(),
                 container: None,
+                raw: "Brave.2012.R5.DVDRip.XViD.LiNE-UNiQUE".to_string(),
             },
         );
         test_grid.insert(
@@ -430,6 +450,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "juggs[ETRG]".to_string(),
                 container: None,
+                raw: "Lets.Be.Cops.2014.BRRip.XViD-juggs[ETRG]".to_string(),
             },
         );
         test_grid.insert(
@@ -447,6 +468,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "FoV [eztv]".to_string(),
                 container: None,
+                raw: "Downton Abbey 5x06 HDTV x264-FoV [eztv]".to_string(),
             },
         );
         test_grid.insert(
@@ -464,6 +486,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "juggs[ETRG]".to_string(),
                 container: None,
+                raw: "Annabelle.2014.HC.HDRip.XViD.AC3-juggs[ETRG]".to_string(),
             },
         );
         test_grid.insert(
@@ -481,6 +504,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "juggs[ETRG]".to_string(),
                 container: None,
+                raw: "Lucy.2014.HC.HDRip.XViD-juggs[ETRG]".to_string(),
             },
         );
         test_grid.insert(
@@ -498,6 +522,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "FUM[ettv]".to_string(),
                 container: None,
+                raw: "The Flash 2014 S01E04 HDTV x264-FUM[ettv]".to_string(),
             },
         );
         test_grid.insert(
@@ -515,6 +540,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "KILLERS [eztv]".to_string(),
                 container: None,
+                raw: "South Park S18E05 HDTV x264-KILLERS [eztv]".to_string(),
             },
         );
         test_grid.insert(
@@ -532,6 +558,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "LOL [eztv]".to_string(),
                 container: None,
+                raw: "The Simpsons S26E05 HDTV x264 PROPER-LOL [eztv]".to_string(),
             },
         );
         test_grid.insert(
@@ -549,6 +576,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "LOL [eztv]".to_string(),
                 container: None,
+                raw: "Two and a Half Men S12E01 HDTV x264 REPACK-LOL [eztv]".to_string(),
             },
         );
         test_grid.insert(
@@ -566,6 +594,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "".to_string(),
                 container: None,
+                raw: "Dinosaur 13 2014 WEBrip XviD AC3 MiLLENiUM".to_string(),
             },
         );
         test_grid.insert(
@@ -583,6 +612,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "RARBG".to_string(),
                 container: None,
+                raw: "Teenage.Mutant.Ninja.Turtles.2014.HDRip.XviD.MP3-RARBG".to_string(),
             },
         );
         test_grid.insert(
@@ -600,6 +630,7 @@ mod tests {
                 audio_channels: Some(audio::AudioChannels::Chan51),
                 release_group: "RARBG".to_string(),
                 container: None,
+                raw: "Dawn.Of.The.Planet.of.The.Apes.2014.1080p.WEB-DL.DD51.H264-RARBG".to_string(),
             },
         );
         test_grid.insert(
@@ -617,6 +648,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "".to_string(),
                 container: None,
+                raw: "Gotham.S01E05.Viper.WEB-DL.x264.AAC".to_string(),
             },
         );
         test_grid.insert(
@@ -634,6 +666,7 @@ mod tests {
                 audio_channels: Some(audio::AudioChannels::Stereo),
                 release_group: "RARBG".to_string(),
                 container: Some(container::Container::Matroska),
+                raw: "Into.The.Storm.2014.1080p.WEB-DL.AAC2.0.H264-RARBG.mkv".to_string(),
             },
         );
         test_grid.insert(
@@ -651,6 +684,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "HorribleSubs".to_string(),
                 container: Some(container::Container::Matroska),
+                raw: "[HorribleSubs] One Punch Man S2 - 03 [1080p].mkv".to_string(),
             },
         );
         test_grid.insert(
@@ -668,6 +702,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "HorribleSubs".to_string(),
                 container: Some(container::Container::Matroska),
+                raw: "[HorribleSubs] Mob Psycho 100 S2 - 10 [720p].mkv".to_string(),
             },
         );
         test_grid.insert(
@@ -685,6 +720,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "".to_string(),
                 container: Some(container::Container::AVI),
+                raw: "Series/Doctor Who (2005)/Season 06/Doctor Who (2005) - E01.avi".to_string(),
             },
         );
         test_grid.insert(
@@ -702,6 +738,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "cd1".to_string(),
                 container: Some(container::Container::AVI),
+                raw: "/var/lib/flemzerd/library/movies/Django Unchained/sparks-django-xvid.cd1.avi".to_string(),
             },
         );
         test_grid.insert(
@@ -719,6 +756,7 @@ mod tests {
                 audio_channels: None,
                 release_group: "BATV[eztv]".to_string(),
                 container: Some(container::Container::Matroska),
+                raw: "/var/lib/flemzerd/library/shows/rick_and_morty/season_3/s03e10/Rick and Morty S03E10 720p HDTV x264-BATV/Rick.and.Morty.S03E10.720p.HDTV.x264-BATV[eztv].mkv".to_string(),
             },
         );
 
